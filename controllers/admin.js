@@ -3,11 +3,11 @@ const express = require('express');
 const router =  express.Router();
 
 router.get('/', (req, res) =>{
-  res.render('admin/index');
+  res.render('admin/index',{});
 });
 
-router.get('/doc', (req, res) =>{
-  res.send('我是后台文档页面');
+router.get('/settings', (req, res) =>{
+  res.render('admin/settings',{});
 });
 
 router.get('/blog', (req, res) =>{
