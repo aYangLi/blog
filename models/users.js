@@ -14,8 +14,8 @@ exports.delete = function () {
 }
 
 // 改
-exports.update = function () {
-    
+exports.update = function (query, opt, cb) {
+   db.query(query, opt, cb) 
 }
 
 // 查
