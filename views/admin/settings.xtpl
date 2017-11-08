@@ -67,6 +67,7 @@
 {{/block}}
 
 {{#block ('scripts')}}
+    <script src='/admin/assets/uploadify/jquery.uploadify.min.js'></script>
     <script>
         $('form').on('submit', function () {
             $.ajax({
@@ -79,6 +80,16 @@
                 }
             })
             return false;
+        });
+
+        // 头像上传
+        $('#upfile').uploadify({
+            swf:'/admin/assets/uploadify/uploadify.swf',
+            uploader:'后台接口',
+            fileObjName:'avatar',
+            onUploadSuccess: function () {
+                console.log(11);
+            }
         })
     </script>
 {{/block}}
