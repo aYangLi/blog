@@ -2,9 +2,28 @@ const express = require('express');
 
 const router =  express.Router();
 
+const path = require('path');
+
 const md5 = require('md5');
 
 const users = require('../models/users');
+
+const multer = require('multer');
+
+// 配置上传目录及文件名
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads/avatar')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+  }
+});
+
+// 配置
+const upload = multer({
+  storage
+});
 
 router.get('/', (req, res) =>{
   res.render('admin/index',{});
@@ -69,6 +88,25 @@ router.post('/repass',(req, res) => {
     }
   })
   
+})
+
+router.post('/upload',upload.single('avatar'), (req, res) => {
+  // 通过 req.file 可以获得上传后的文件信息
+  // console.log(req.file);
+  // 将上传后的图片路径写入数据库
+  let query = 'UPDATE `users` SET ? WHERE ?'
+  users.update(query,[{avatar:req.file.path},{id:req.session.logInfo.id}], (err, result) => {
+    
+    if (err) return console.log(err);
+
+    res.json({
+      code:10000,
+      msg:'ok',
+      result:{
+        path:req.file.path
+      }
+    })
+  })
 })
 
 

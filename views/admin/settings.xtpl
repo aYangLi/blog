@@ -7,7 +7,11 @@
             <div class="form-group">
                 <label for="" class="col-xs-3 control-label">头像</label>
                 <div class="col-xs-2 preview">
-                    <img src="./images/default.png">
+                    {{#if (info.avatar)}}
+                    <img src="/{{info.avatar}}" alt="">
+                    {{else}}
+                    <img src="/amdin/images/default.png">
+                    {{/if}}
                     <input type="file" id="upfile">
                     <div class="cover">
                         <i class="fa fa-upload"></i>
@@ -67,7 +71,7 @@
 {{/block}}
 
 {{#block ('scripts')}}
-    <script src='/admin/assets/uploadify/jquery.uploadify.min.js'></script>
+    <script src="/admin/assets/uploadify/jquery.uploadify.min.js"></script>
     <script>
         $('form').on('submit', function () {
             $.ajax({
@@ -84,12 +88,20 @@
 
         // 头像上传
         $('#upfile').uploadify({
-            swf:'/admin/assets/uploadify/uploadify.swf',
-            uploader:'后台接口',
-            fileObjName:'avatar',
-            onUploadSuccess: function () {
-                console.log(11);
+            width:120,
+            height:120,
+            buttonText:'',
+            swf: '/admin/assets/uploadify/uploadify.swf',
+            uploader: '/admin/upload',
+            fileObjName: 'avatar',
+            itemTemplate: '<span></span>',
+            onUploadSuccess: function (file, data) {
+                // console.log(data);
+                data = JSON.parse(data);
+                // 动态预览图片
+                if (data.code == 10000)
+                $('.preview img').attr('src', '/' + data.result.path);
             }
-        })
+        });
     </script>
 {{/block}}

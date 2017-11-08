@@ -8,6 +8,13 @@
     <link rel="stylesheet" href="/admin/assets/nprogress/nprogress.css">
     <link rel="stylesheet/less" href=" /admin/less/index.less">
     <script src="/admin/libs/less.js"></script>
+    <style>
+        .uploadify{
+            position:absolute;
+            left:0;
+            top:0;
+        }
+    </style>
 </head>
 <body>
     
@@ -18,7 +25,7 @@
             <!-- 头像 -->
             <div class="avatar img-circle">
                 {{#if (logInfo.avatar)}}
-                  <img src="{{logInfo.avatar}}">
+                  <img src="/{{logInfo.avatar}}">
                 {{else}}
                   <img src="/admin/images/default.png">              
                 {{/if}}
