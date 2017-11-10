@@ -1,0 +1,74 @@
+{{extend ('./layout.xtpl')}}
+
+{{#block ('body')}}
+<!-- 写文章 -->
+<div class="body blog">
+    <!-- 面包屑 -->
+    <ol class="breadcrumb">
+        <li><a href="javascript:;">文章管理</a></li>
+        <li class="active">写文章</li>
+    </ol>
+    <div class="settings">
+        <form action="" class="form-horizontal">
+        {{#if (post.id)}}
+            <input type='hidden' value='{{post.id}}'>
+            {{/if}}
+            <div class="form-group">
+                <label for="" class="col-xs-3 control-label">标题</label>
+                <div class="col-xs-6">
+                    <input type="text" name="title" value='{{post.title}}' class="form-control input-sm">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-xs-3 control-label">摘要</label>
+                <div class="col-xs-6 ckeditor">
+                    <textarea name='brief' rows="5" class="form-control input-sm">{{post.brief}}</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-xs-3 control-label">内容</label>
+                <div class="col-xs-6">
+                    <textarea id="ckeditor" name='content' class="form-control input-sm">{{post.content}}</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-9">
+                    <input type='submit' value='保存' class="btn btn-success btn-sm pull-right">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{{/block}}
+
+{{#block ('scripts')}}
+    <script src="/admin/assets/ckeditor/ckeditor.js"></script>
+    <script>
+        CKEDITOR.replace('ckeditor', {
+            toolbarGroups: [
+                { name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
+                { name: 'forms' },
+                { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+                { name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
+                { name: 'styles' },
+                { name: 'colors' }
+            ]
+        });
+
+        // 表单提交
+        $('form').on('submit', function () {
+            $.ajax({
+                url:'/admin/post',
+                type:'post',
+                data:$(this).serialize(),
+                success:function (data) {
+                    console.log(data);
+                    if (data.code ==10000)
+                    console.log('添加成功');
+                }
+            })
+
+            return false;
+        })
+    </script>
+{{/block}}

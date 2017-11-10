@@ -49,12 +49,12 @@
                     </a>
                     <ul class="list-unstyled">
                         <li>
-                            <a href="./blog_add.html">
+                            <a href="/admin/add">
                                  写文章
                             </a>
                         </li>
                         <li>
-                            <a href="./blog_list.html">
+                            <a href="/admin/list">
                                 我的文章
                             </a>
                         </li>
@@ -99,10 +99,10 @@
         </div>
     </div>
     
-    <script src="./assets/jquery/jquery.min.js"></script>
-    <script src="./assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="./assets/nprogress/nprogress.js"></script>
-    <script src="./libs/common.js"></script>
+    <script src="/admin/assets/jquery/jquery.min.js"></script>
+    <script src="/admin/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/admin/assets/nprogress/nprogress.js"></script>
+    <script src="/admin/libs/common.js"></script>
     {{{block ('scripts')}}}
     <script>
       $('#logout').on('click',function () {

@@ -6,6 +6,7 @@ const path = require('path');
 
 const md5 = require('md5');
 
+const posts = require('../models/posts');
 const users = require('../models/users');
 
 const multer = require('multer');
@@ -54,10 +55,51 @@ router.post('/settings', (req, res) =>{
 
 });
 
+// 渲染修改密码页面
 router.get('/repass',(req, res) => {
   res.render('admin/repass', {})
   
 })
+
+// 渲染添加文章页面
+router.get('/add',(req, res) => {
+  res.render('admin/post', {})
+})
+
+// 渲染编辑文章
+router.get('/edit/:id',(req, res) => {
+// SQL语句
+let query = 'SELECT * FROM `posts` WHERE ?';
+console.log(req.params);
+posts.find(query, req.params, (err, result) => {
+  if(err) return console.log(err);
+  console.log(result);
+  res.render('admin/post', {post: result[0]});
+});
+
+})
+// 渲染添加文章列表
+router.get('/list',(req, res) => {
+  
+  // posts.findAll((err,data) =>{
+  //   if(err) return console.log(err);
+  //   console.log(data);
+  //   res.render('admin/list', {posts:data})
+  // })
+
+  // 加上查询条件
+
+  // 查询文章（状态不为0）
+  let query = 'SELECT * FROM `posts` WHERE ?';
+  
+  posts.find(query, {status: 0}, (err, data) => {
+      if(err) return console.log(err);
+
+      res.render('admin/list', {posts: data});
+  });
+
+})
+
 
 
 router.post('/repass',(req, res) => {
@@ -108,6 +150,76 @@ router.post('/upload',upload.single('avatar'), (req, res) => {
     })
   })
 })
+
+// 添加文章
+router.post('/post', (req, res) => {
+  // console.log(req.body);
+
+  // 文章作者
+  req.body.uid = req.session.logInfo.id;
+  // 添加时间
+  req.body.time = new Date();
+
+  req.body.status = 0;
+
+  // 如果是添加操作 则没有 id
+  // 如果是编辑操作 则有 id
+
+  let query;
+
+  // 修改
+  // 修改数据库
+  if(req.body.id) { // 编辑
+
+      let id = req.body.id;
+      delete req.body.id;
+
+      query = 'UPDATE `posts` SET ? WHERE id=' + id;
+
+      posts.update(query, req.body, (err, result) => {
+          if(err) return console.log(err);
+
+          res.json({
+              code: 10000,
+              msg: 'OK',
+              result: {}
+          });
+      });
+
+      return;
+  }
+
+  // 添加
+  query = 'INSERT INTO `posts` SET ?';
+
+  // 插入数据库
+  posts.insert(query, req.body, (err, result) => {
+      if(err) return console.log(err);
+      // 响应浏览器结果
+      res.json({
+          code: 10000,
+          msg: 'OK',
+          result: {}
+      });
+  });
+})
+
+// 删除文章
+router.post('/delete', (req, res) => {
+  
+      // 更改文章状态
+      let query = 'UPDATE `posts` SET ? WHERE ?';
+  
+      posts.update(query, [{status: 1}, {id: req.body.id}], (err, result) => {
+          if(err) return console.log(err);
+  
+          res.json({
+              code: 10000,
+              msg: 'OK',
+              result: {}
+          })
+      });
+  })
 
 
 module.exports = router;
