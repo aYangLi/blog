@@ -4,12 +4,20 @@ const router =  express.Router();
 
 const md5 = require('md5');
 
+const posts = require('../models/posts');
+
 // 用户模型
 const users = require('../models/users');
 
 router.get('/', (req, res) =>{
   // res.send('我是前台页面');
-  res.render('home/index', {});
+  let query = 'SELECT * FROM `posts` WHERE status=0';
+  posts.find(query,[], (err, result)=>{
+    if (err) return console.log(err);
+    console.log(result);
+    res.render('home/index', {posts:result});
+  })
+
 });
 
 router.get('/register', (req, res) =>{
@@ -68,6 +76,28 @@ router.post('/login',(req, res) =>{
         result:{},
       })
     }
+  });
+})
+
+// 渲染关于我们
+router.get('/about', (req, res) => {
+  res.render('home/about', {})
+})
+
+// 渲染加入我们
+router.get('/join', (req, res) => {
+  res.render('home/join', {})
+})
+
+// 渲染文章页面
+router.get('/article/:id', (req, res) => {
+  // SQL语句
+  let query = 'SELECT * FROM `posts` WHERE ?';
+
+  posts.find(query, {id: req.params.id}, (err, result) => {
+      if(err) return console.log(err);
+      
+      res.render('home/article', {post: result[0]});
   });
 })
 

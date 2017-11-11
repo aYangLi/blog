@@ -15,9 +15,9 @@
             <div class="wrapper">
                 <!-- 导航 -->
                 <nav>
-                    <a href="./index.html">Home</a>
-                    <a href="./about.html">关于我们</a>
-                    <a href="./join.html">唯医骨科</a>
+                    <a href="./">Home</a>
+                    <a href="./about">关于我们</a>
+                    <a href="./join">唯医骨科</a>
                 </nav>
                 <!-- 注册/登录 -->
                 <div class="extra">

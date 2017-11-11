@@ -57,6 +57,12 @@
 
         // 表单提交
         $('form').on('submit', function () {
+            
+            // 提交ckeditor数据
+            for(instance in CKEDITOR.instances) {
+                CKEDITOR.instances[instance].updateElement();
+            }
+
             $.ajax({
                 url:'/admin/post',
                 type:'post',
