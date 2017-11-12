@@ -9,15 +9,42 @@ const posts = require('../models/posts');
 // 用户模型
 const users = require('../models/users');
 
-router.get('/', (req, res) =>{
-  // res.send('我是前台页面');
-  let query = 'SELECT * FROM `posts` WHERE status=0';
-  posts.find(query,[], (err, result)=>{
-    if (err) return console.log(err);
-    console.log(result);
-    res.render('home/index', {posts:result});
-  })
+// 渲染前台首页
+router.get('/', (req, res) => {
+  // 获取当前页码
+  let page = req.query.page || 1;
+  // 错误处理
+  page = parseInt(page) || 1;
 
+  // 放算从哪里可以获取数据
+  let offset = (page - 1) * 2;
+
+  // SQL查询总条数据
+  let query = 'SELECT COUNT(*) AS total FROM `posts` WHERE status=0';
+
+  posts.find(query, [], (err, data) => {
+      if(err) return console.log(err);
+
+      // 计算数据库总条数
+      let total = data[0].total;
+      // 计算总的页数
+      let totalPage = Math.ceil(total / 2);
+
+      // let query = 'SELECT * FROM `posts` WHERE status=0';
+      // SQL
+      query = 'SELECT posts.id AS pid, title, brief, time, users.id AS uid, avatar, name FROM `posts` LEFT JOIN `users` ON posts.uid=users.id WHERE posts.status=0 LIMIT ?, 2';
+
+      posts.find(query, [offset], (err, result) => {
+          if(err) return console.log(err);
+
+          res.render('home/index', {
+              posts: result,
+              page: page,
+              total: totalPage
+          });
+      });
+
+  })
 });
 
 router.get('/register', (req, res) =>{
